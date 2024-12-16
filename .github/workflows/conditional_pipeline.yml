@@ -1,4 +1,4 @@
-name: Deploy Docker File
+name: Deploy with Approval
 
 on:
   push:
@@ -7,29 +7,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  approval:
-    runs-on: self-hosted
-    outputs:
-      run_pipeline: ${{ steps.confirmation.outputs.run_pipeline }}
-    steps:
-      - name: Ask for Approval
-        id: confirmation
-        run: |
-          echo "Do you want to run the deployment? (yes/no)"
-          read input
-          echo "Your input: $input"
-          if [[ "$input" == "yes" ]]; then
-            echo "run_pipeline=true" >> $GITHUB_OUTPUT
-          else
-            echo "run_pipeline=false" >> $GITHUB_OUTPUT
-          fi
-          echo "Approval Status: $input"
-
   build:
-    needs: approval
-    if: needs.approval.outputs.run_pipeline == 'true' # Run only if approved
     runs-on: self-hosted
     steps:
-      - name: Build the Docker file
+      - name: Approval before Deployment
+        run: |
+          echo "Do you want to proceed with the deployment? (yes/no)"
+          read approval
+          if [[ "$approval" != "yes" ]]; then
+            echo "Deployment canceled by user."
+            exit 1
+          fi
+          echo "Approval received. Proceeding with deployment."
+
+      - name: Build and Deploy Docker File
         run: sudo -E /home/ubuntu/deploy
 
