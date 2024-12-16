@@ -8,13 +8,29 @@ on:
 
 jobs:
   build:
-    if: ${{ vars.RUN_DEPLOYMENT == 'false' }}  # Check the flag value
     runs-on: self-hosted
     steps:
+      # Define the deployment flag here
+      - name: Set Deployment Flag
+        id: deploy_flag
+        run: |
+          DEPLOYMENT_FLAG="false"  # Set this to 'true' or 'false'
+          echo "flag=$DEPLOYMENT_FLAG" >> $GITHUB_ENV
+
+      # Check the flag and proceed only if it is 'true'
       - name: Check Deployment Flag
+        if: env.flag == 'true'
         run: |
           echo "Deployment flag is set to true. Proceeding with deployment."
 
+      # Run the deployment script
       - name: Build and Deploy Docker File
+        if: env.flag == 'true'
         run: sudo -E /home/ubuntu/deploy
+
+      # Message if deployment is skipped
+      - name: Skip Deployment Message
+        if: env.flag != 'true'
+        run: |
+          echo "Deployment flag is set to false. Skipping deployment."
 
