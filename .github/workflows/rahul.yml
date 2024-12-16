@@ -11,5 +11,5 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Build the Docker file
-        run: sudo /home/ubuntu/deploy
+        run: sudo -E  /home/ubuntu/deploy
 
