@@ -1,0 +1,14 @@
+name: deploy docker file
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+    steps:
+      - name: Build the Docker file
+        run: sudo bash /home/ubuntu deploy
