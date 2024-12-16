@@ -25,7 +25,7 @@ jobs:
 
       # Run the deployment script
       - name: Build and Deploy Docker File
-        if: env.flag == 'true'
+        if: env.flag == 'false'
         run: sudo -E /home/ubuntu/deploy
 
       # Message if deployment is skipped
