@@ -1,4 +1,4 @@
-name: Deploy with Approval
+name: Conditional Deploy Based on Flag
 
 on:
   push:
@@ -8,17 +8,12 @@ on:
 
 jobs:
   build:
+    if: ${{ vars.RUN_DEPLOYMENT == 'true' }}  # Check the flag value
     runs-on: self-hosted
     steps:
-      - name: Approval before Deployment
+      - name: Check Deployment Flag
         run: |
-          echo "Do you want to proceed with the deployment? (yes/no)"
-          read approval
-          if [[ "$approval" != "yes" ]]; then
-            echo "Deployment canceled by user."
-            exit 1
-          fi
-          echo "Approval received. Proceeding with deployment."
+          echo "Deployment flag is set to true. Proceeding with deployment."
 
       - name: Build and Deploy Docker File
         run: sudo -E /home/ubuntu/deploy
