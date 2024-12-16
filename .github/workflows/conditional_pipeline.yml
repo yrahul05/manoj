@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    if: ${{ vars.RUN_DEPLOYMENT == 'false' }}  # Check the flag value
+    if: ${{ vars.RUN_DEPLOYMENT == 'true' }}  # Check the flag value
     runs-on: self-hosted
     steps:
       - name: Check Deployment Flag
