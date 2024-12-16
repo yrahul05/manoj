@@ -28,7 +28,7 @@ jobs:
           fi
 
       - name: Run MySQL script if confirmed
-        if: env.run_mysql == 'true'
+        if: env.run_mysql == 'false'
         run: sudo -E  /home/ubuntu/deploy
 
 
