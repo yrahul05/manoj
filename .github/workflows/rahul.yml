@@ -4,12 +4,32 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      confirm_mysql_script:
+        description: 'Do you want to run the MySQL script? (yes/no)'
+        required: true
+        default: 'yes'
+
 jobs:
-
   build:
-
     runs-on: self-hosted
     steps:
-      - name: Build the Docker file
+      - name: Set MySQL run flag
+        id: set_mysql_flag
+        run: |
+          # Default to "yes" for push events
+          INPUT_CONFIRM_MYSQL_SCRIPT=${{ github.event.inputs.confirm_mysql_script || 'yes' }}
+          echo "Input for MySQL script: $INPUT_CONFIRM_MYSQL_SCRIPT"
+
+          if [[ "$INPUT_CONFIRM_MYSQL_SCRIPT" == "yes" ]]; then
+            echo "run_mysql=true" >> $GITHUB_ENV
+          else
+            echo "run_mysql=false" >> $GITHUB_ENV
+          fi
+
+      - name: Run MySQL script if confirmed
+        if: env.run_mysql == 'true'
         run: sudo -E  /home/ubuntu/deploy
 
+
+      
